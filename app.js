@@ -8,6 +8,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
 app.get('/', (req, res) => res.send('Hello World!'))
+app.get('/api/isSadPost', (req, res) => res.send('post some thing as a text parameter to me'))
 
 app.post('/api/isSadPost', (req, res) => {
     if (req.body.text) {
