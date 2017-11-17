@@ -1,0 +1,16 @@
+{
+  "name": "happyzone",
+  "version": "1.0.0",
+  "description": "Keep Sad Stories Away",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Osama Soliman",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.17.1",
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2"
+  }
+}
