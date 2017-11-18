@@ -1,11 +1,15 @@
 const express = require('express')
+const cors = require('cors')
 const axios = require('axios')
 var bodyParser = require('body-parser');
 
 const app = express()
 
+app.use(cors())
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
+
+
 
 app.get('/', (req, res) => res.send('Hello World!'))
 app.get('/api/isSadPost', (req, res) => res.send('post something as a text parameter to me'))
