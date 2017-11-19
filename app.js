@@ -9,8 +9,6 @@ app.use(cors())
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
-
-
 app.get('/', (req, res) => res.send('Hello World!'))
 app.get('/api/isSadPost', (req, res) => res.send('post something as a text parameter to me'))
 
@@ -44,7 +42,7 @@ const isSadPost = (input) => {
             .catch(error => reject(error));
 
         const isSad = tones => tones
-            .filter(tone => tone.tone_id === 'sadness')
+            .filter(tone => tone.tone_id === 'sadness' && tone.score >= 0.7)
             .length > 0;
     });
 
