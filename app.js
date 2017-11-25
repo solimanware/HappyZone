@@ -14,7 +14,12 @@ app.get('/api/isSadPost', (req, res) => res.send('post something as a text param
 
 app.post('/api/isSadPost', (req, res) => {
     const body = req.body;
-    requireParams({req,res}, ['text', 'bonus'], true)
+    requireParams({
+        req,
+        res
+    }, [
+        'text', 'bonus'
+    ], true)
 
     console.log('I passed the function');
 
@@ -27,12 +32,12 @@ app.post('/api/isSadPost', (req, res) => {
             }
         })
     })
-    
+
 })
 
 app.listen(process.env.PORT || 3000, () => console.log('Server running on port 3000'))
 
-const isSadPost = (input) => {
+function isSadPost(input) {
     if (!input) 
         return Error('no input found')
     const promise = new Promise((resolve, reject) => {
