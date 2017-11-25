@@ -1,8 +1,8 @@
 const express = require('express')
 const cors = require('cors')
 const axios = require('axios')
-var bodyParser = require('body-parser');
-
+const bodyParser = require('body-parser');
+const requireParams = require('require-params')
 const app = express()
 
 app.use(cors())
@@ -13,22 +13,28 @@ app.get('/', (req, res) => res.send('Hello World!'))
 app.get('/api/isSadPost', (req, res) => res.send('post something as a text parameter to me'))
 
 app.post('/api/isSadPost', (req, res) => {
-    if (req.body.text) {
-        isSadPost(req.body.text).then((result) => {
-            res.send({
-                data: {
-                    result: result
-                }
-            })
+    const body = req.body;
+    requireParams({req,res}, ['text', 'bonus'], true)
+
+    console.log('I passed the function');
+
+    isSadPost(body.text).then((result) => {
+        console.log('I entered isSadPost');
+        res.send({
+            data: {
+                result: result,
+                bonus: "you'r doing great"
+            }
         })
-    } else {
-        res.send({error: 'text parameter > NOT FOUND '})
-    }
+    })
+    
 })
 
 app.listen(process.env.PORT || 3000, () => console.log('Server running on port 3000'))
 
 const isSadPost = (input) => {
+    if (!input) 
+        return Error('no input found')
     const promise = new Promise((resolve, reject) => {
         axios
             .post('https://tone-analyzer-demo.mybluemix.net/api/tone', {
