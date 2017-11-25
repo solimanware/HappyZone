@@ -18,7 +18,7 @@ app.post('/api/isSadPost', (req, res) => {
         req,
         res
     }, [
-        'text', 'bonus'
+        'text'
     ], true)
 
     console.log('I passed the function');
