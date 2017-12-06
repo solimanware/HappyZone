@@ -42,7 +42,7 @@ function isSadPost(input) {
         return Error('no input found')
     const promise = new Promise((resolve, reject) => {
         axios
-            .post('https://tone-analyzer-demo.ng.mybluemix.net/api/tone', {
+            .post('https://tone-analyzer-demo.ng.bluemix.net/api/tone', {
             text: input,
             language: 'en'
         })
