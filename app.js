@@ -4,27 +4,20 @@ const axios = require('axios')
 const bodyParser = require('body-parser');
 const requireParams = require('require-params')
 const app = express()
+const fetch = require('node-fetch')
 
 app.use(cors())
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+//test
 app.get('/', (req, res) => res.send('Hello World!'))
 app.get('/api/isSadPost', (req, res) => res.send('post something as a text parameter to me'))
 
+//logic
 app.post('/api/isSadPost', (req, res) => {
     const body = req.body;
-    requireParams({
-        req,
-        res
-    }, [
-        'text'
-    ], true)
-
-    console.log('I passed the function');
-
     isSadPost(body.text).then((result) => {
-        console.log('I entered isSadPost');
         res.send({
             data: {
                 result: result,
@@ -32,30 +25,33 @@ app.post('/api/isSadPost', (req, res) => {
             }
         })
     })
-
 })
 
 app.listen(process.env.PORT || 3000, () => console.log('Server running on port 3000'))
 
-function isSadPost(input) {
-    if (!input) 
-        return Error('no input found')
-    const promise = new Promise((resolve, reject) => {
-        axios
-            .post('https://tone-analyzer-demo.ng.bluemix.net/api/tone', {
-            text: input,
-            language: 'en'
-        })
-            .then(response => {
-                const tones = response.data.document_tone.tones
-                resolve(isSad(tones))
-            })
-            .catch(error => reject(error));
+async function isSadPost(input) {
+    if (!input) { return Error('no input found') }
+    let response = await fetch("https://tone-analyzer-demo.ng.bluemix.net/api/tone", {
+        "headers": {
+            "accept": "*/*",
+            "accept-language": "en-US,en;q=0.9,ar;q=0.8",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "same-origin",
+            "x-requested-with": "XMLHttpRequest"
+        },
+        "referrer": "https://tone-analyzer-demo.ng.bluemix.net/",
+        "referrerPolicy": "no-referrer-when-downgrade",
+        "body": `toneInput%5Btext%5D=${input}&contentLanguage=en`,
+        "method": "POST",
+        "mode": "cors"
+    })
 
-        const isSad = tones => tones
-            .filter(tone => tone.tone_id === 'sadness' && tone.score >= 0.7)
-            .length > 0;
-    });
+    const isSad = tones => tones
+        .filter(tone => tone.tone_id === 'sadness' && tone.score >= 0.7)
+        .length > 0;
 
-    return promise
+    let data = await response.json();
+    return isSad(data.document_tone.tones);
 }
